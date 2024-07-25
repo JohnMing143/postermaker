@@ -6,7 +6,7 @@
     <title>大字报生成器</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial, "Microsoft YaHei", sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
@@ -36,22 +36,18 @@
     <input type="color" id="fontColor" value="#000000">
     <select id="fontFamily">
         <option value="Arial">Arial</option>
-        <option value="Verdana">Verdana</option>
-        <option value="Times New Roman">Times New Roman</option>
-        <option value="Courier">Courier</option>
+        <option value="Microsoft YaHei">微软雅黑</option>
+        <option value="SimHei">黑体</option>
+        <option value="SimSun">宋体</option>
+        <option value="KaiTi">楷体</option>
     </select>
     <select id="textAlign">
-        <option value="left">左对齐</option>
-        <option value="center">居中</option>
-        <option value="right">右对齐</option>
+        <option value="start">左对齐</option>
+        <option value="middle">居中</option>
+        <option value="end">右对齐</option>
     </select>
     <input type="number" id="lineHeight" placeholder="行高" value="1.2" step="0.1">
-    <select id="bgType">
-        <option value="color">纯色背景</option>
-        <option value="gradient">渐变背景</option>
-    </select>
     <input type="color" id="bgColor" value="#f0f0f0">
-    <input type="text" id="bgGradient" placeholder="渐变色（用逗号分隔，如：#ff0000,#00ff00）" style="display:none;">
     <button onclick="generateImage()">生成图片</button>
     <a id="downloadLink" style="display:none;">下载图片</a>
     <img id="preview" alt="预览图片">
@@ -74,11 +70,9 @@
             const fontFamily = encodeURIComponent(document.getElementById('fontFamily').value);
             const textAlign = document.getElementById('textAlign').value;
             const lineHeight = document.getElementById('lineHeight').value;
-            const bgType = document.getElementById('bgType').value;
             const bgColor = encodeURIComponent(document.getElementById('bgColor').value);
-            const bgGradient = encodeURIComponent(document.getElementById('bgGradient').value);
             
-            const url = `${workerUrl}?text=${text}&fontSize=${fontSize}&fontColor=${fontColor}&fontFamily=${fontFamily}&textAlign=${textAlign}&lineHeight=${lineHeight}&bgType=${bgType}&bgColor=${bgColor}&bgGradient=${bgGradient}`;
+            const url = `${workerUrl}?text=${text}&fontSize=${fontSize}&fontColor=${fontColor}&fontFamily=${fontFamily}&textAlign=${textAlign}&lineHeight=${lineHeight}&bgColor=${bgColor}`;
             
             const preview = document.getElementById('preview');
             preview.src = url;
@@ -86,9 +80,9 @@
             if (!isPreview) {
                 const downloadLink = document.getElementById('downloadLink');
                 downloadLink.href = url;
-                downloadLink.download = 'dazibaoko.png';
+                downloadLink.download = 'dazibaoko.svg';
                 downloadLink.style.display = 'inline-block';
-                downloadLink.textContent = '下载图片';
+                downloadLink.textContent = '下载SVG图片';
             }
         }
 
@@ -98,16 +92,13 @@
         document.getElementById('fontFamily').addEventListener('change', updatePreview);
         document.getElementById('textAlign').addEventListener('change', updatePreview);
         document.getElementById('lineHeight').addEventListener('input', updatePreview);
-        document.getElementById('bgType').addEventListener('change', function() {
-            const bgGradient = document.getElementById('bgGradient');
-            bgGradient.style.display = this.value === 'gradient' ? 'block' : 'none';
-            updatePreview();
-        });
         document.getElementById('bgColor').addEventListener('input', updatePreview);
-        document.getElementById('bgGradient').addEventListener('input', updatePreview);
 
         // 设置项目仓库链接
         document.getElementById('projectLink').href = 'https://github.com/JohnMing143/postermaker';
+
+        // 初始预览
+        updatePreview();
     </script>
 </body>
 </html>
