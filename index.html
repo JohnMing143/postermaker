@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大字报生成器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        textarea, input, button {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+        #preview {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>大字报生成器</h1>
+    <textarea id="text" rows="5" placeholder="输入您的文本"></textarea>
+    <input type="number" id="fontSize" placeholder="字体大小" value="30">
+    <input type="color" id="bgColor" value="#f0f0f0">
+    <button onclick="generateImage()">生成图片</button>
+    <img id="preview" alt="预览图片">
+
+    <footer>
+        &copy; 2024 大字报生成器 | 由 Ming143 制作 | <a href="#" id="projectLink">项目仓库</a>
+    </footer>
+
+    <script>
+        async function generateImage() {
+            const text = encodeURIComponent(document.getElementById('text').value);
+            const fontSize = document.getElementById('fontSize').value;
+            const bgColor = encodeURIComponent(document.getElementById('bgColor').value);
+            
+            const workerUrl = 'https://postermaker.ming143.eu.org'; // 替换为您的Worker URL
+            const url = `${workerUrl}?text=${text}&fontSize=${fontSize}&bgColor=${bgColor}`;
+            
+            const preview = document.getElementById('preview');
+            preview.src = url;
+        }
+
+        // 设置项目仓库链接
+        document.getElementById('projectLink').href = 'https://github.com/JohnMing143/postermaker';
+    </script>
+</body>
+</html>
