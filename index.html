@@ -11,7 +11,7 @@
             margin: 0 auto;
             padding: 20px;
         }
-        textarea, input, button {
+        textarea, input, select, button {
             width: 100%;
             margin-bottom: 10px;
             padding: 5px;
@@ -33,8 +33,27 @@
     <h1>大字报生成器</h1>
     <textarea id="text" rows="5" placeholder="输入您的文本"></textarea>
     <input type="number" id="fontSize" placeholder="字体大小" value="30">
+    <input type="color" id="fontColor" value="#000000">
+    <select id="fontFamily">
+        <option value="Arial">Arial</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Courier">Courier</option>
+    </select>
+    <select id="textAlign">
+        <option value="left">左对齐</option>
+        <option value="center">居中</option>
+        <option value="right">右对齐</option>
+    </select>
+    <input type="number" id="lineHeight" placeholder="行高" value="1.2" step="0.1">
+    <select id="bgType">
+        <option value="color">纯色背景</option>
+        <option value="gradient">渐变背景</option>
+    </select>
     <input type="color" id="bgColor" value="#f0f0f0">
+    <input type="text" id="bgGradient" placeholder="渐变色（用逗号分隔，如：#ff0000,#00ff00）" style="display:none;">
     <button onclick="generateImage()">生成图片</button>
+    <a id="downloadLink" style="display:none;">下载图片</a>
     <img id="preview" alt="预览图片">
 
     <footer>
@@ -42,17 +61,50 @@
     </footer>
 
     <script>
-        async function generateImage() {
+        const workerUrl = 'https://postermaker.johnming143.workers.dev';
+
+        function updatePreview() {
+            generateImage(true);
+        }
+
+        async function generateImage(isPreview = false) {
             const text = encodeURIComponent(document.getElementById('text').value);
             const fontSize = document.getElementById('fontSize').value;
+            const fontColor = encodeURIComponent(document.getElementById('fontColor').value);
+            const fontFamily = encodeURIComponent(document.getElementById('fontFamily').value);
+            const textAlign = document.getElementById('textAlign').value;
+            const lineHeight = document.getElementById('lineHeight').value;
+            const bgType = document.getElementById('bgType').value;
             const bgColor = encodeURIComponent(document.getElementById('bgColor').value);
+            const bgGradient = encodeURIComponent(document.getElementById('bgGradient').value);
             
-            const workerUrl = 'https://postermaker.ming143.eu.org'; // 替换为您的Worker URL
-            const url = `${workerUrl}?text=${text}&fontSize=${fontSize}&bgColor=${bgColor}`;
+            const url = `${workerUrl}?text=${text}&fontSize=${fontSize}&fontColor=${fontColor}&fontFamily=${fontFamily}&textAlign=${textAlign}&lineHeight=${lineHeight}&bgType=${bgType}&bgColor=${bgColor}&bgGradient=${bgGradient}`;
             
             const preview = document.getElementById('preview');
             preview.src = url;
+
+            if (!isPreview) {
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = url;
+                downloadLink.download = 'dazibaoko.png';
+                downloadLink.style.display = 'inline-block';
+                downloadLink.textContent = '下载图片';
+            }
         }
+
+        document.getElementById('text').addEventListener('input', updatePreview);
+        document.getElementById('fontSize').addEventListener('input', updatePreview);
+        document.getElementById('fontColor').addEventListener('input', updatePreview);
+        document.getElementById('fontFamily').addEventListener('change', updatePreview);
+        document.getElementById('textAlign').addEventListener('change', updatePreview);
+        document.getElementById('lineHeight').addEventListener('input', updatePreview);
+        document.getElementById('bgType').addEventListener('change', function() {
+            const bgGradient = document.getElementById('bgGradient');
+            bgGradient.style.display = this.value === 'gradient' ? 'block' : 'none';
+            updatePreview();
+        });
+        document.getElementById('bgColor').addEventListener('input', updatePreview);
+        document.getElementById('bgGradient').addEventListener('input', updatePreview);
 
         // 设置项目仓库链接
         document.getElementById('projectLink').href = 'https://github.com/JohnMing143/postermaker';
