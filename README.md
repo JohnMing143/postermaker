@@ -34,7 +34,7 @@ The index.html file can be deployed to various online hosting platforms such as 
 
 Your site will be generated within minutes, and GitHub will provide you with a link.
 
-Note: Make sure to update the `projectLink` variable in the index.html file to point to the location of your worker.
+Note: Make sure to update the `workerUrl` variable in the index.html file to point to the location of your worker.
 
 ## Usage
 
