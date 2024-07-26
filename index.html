@@ -4,30 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PosterMaker - 海报制作器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Noto+Serif+SC&display=swap" rel="stylesheet">
     <style>
-        @font-face {
-            font-family: 'siyuansong';
-            src: url('https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/siyuansong.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        @font-face {
-            font-family: 'EVA';
-            src: url('https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/EVA.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        @font-face {
-            font-family: 'SimSun-ExtB';
-            src: url('https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/SimSun-ExtB.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-
         body {
-            font-family: 'Noto Sans SC', siyuansong, sans-serif;
+            font-family: 'Noto Sans SC', 'Noto Serif SC', Arial, sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
@@ -107,8 +87,15 @@
     <div class="form-group">
         <label for="fontFamily">字体：</label>
         <select id="fontFamily">
-            <option value="siyuansong">思源宋</option>
-            <option value="EVA">EVA</option>
+            <option value="FangSong">仿宋</option>
+            <option value="SimHei">黑体</option>
+            <option value="SimSun">宋体</option>
+            <option value="KaiTi">楷体</option>
+            <option value="STXingkai">行楷</option>
+            <option value="STCaiyun">彩云</option>
+            <option value="STHupo">华文琥珀</option>
+            <option value="STLiti">隶书</option>
+            <option value="STXinwei">新魏</option>
             <option value="SimSun-ExtB">明朝体</option>
         </select>
     </div>
@@ -139,7 +126,9 @@
         <label for="gradientColor1">渐变色1：</label>
         <input type="color" id="gradientColor1" value="#ffffff">
         <label for="gradientColor2">渐变色2：</label>
-        <input type="color" id="gradientColor2" value="#f0f0f0">
+        <input type="color" id="gradientColor2" value="#a0a0a0">
+        <label for="gradientColor3">渐变色3：</label>
+        <input type="color" id="gradientColor3" value="#f0f0f0">
     </div>
     <button onclick="generateImage()">生成海报</button>
     <button onclick="resetSettings()">重置设置</button>
@@ -168,13 +157,14 @@
             const bgColor = encodeURIComponent(document.getElementById('bgColor').value);
             const gradientColor1 = encodeURIComponent(document.getElementById('gradientColor1').value);
             const gradientColor2 = encodeURIComponent(document.getElementById('gradientColor2').value);
+            const gradientColor3 = encodeURIComponent(document.getElementById('gradientColor3').value);
             
             let url = `${workerUrl}?text=${text}&fontSize=${fontSize}&fontColor=${fontColor}&fontFamily=${fontFamily}&textAlign=${textAlign}&lineHeight=${lineHeight}&bgType=${bgType}`;
             
             if (bgType === 'color') {
                 url += `&bgColor=${bgColor}`;
             } else {
-                url += `&bgGradient=${gradientColor1},${gradientColor2}`;
+                url += `&bgGradient=${gradientColor1},${gradientColor2},${gradientColor3}`;
             }
             
             const preview = document.getElementById('preview');
@@ -193,13 +183,14 @@
             document.getElementById('text').value = '';
             document.getElementById('fontSize').value = '30';
             document.getElementById('fontColor').value = '#000000';
-            document.getElementById('fontFamily').value = 'siyuansong';
+            document.getElementById('fontFamily').value = 'Arial';
             document.getElementById('textAlign').value = 'middle';
             document.getElementById('lineHeight').value = '1.2';
             document.getElementById('bgType').value = 'color';
             document.getElementById('bgColor').value = '#f0f0f0';
             document.getElementById('gradientColor1').value = '#ffffff';
-            document.getElementById('gradientColor2').value = '#f0f0f0';
+            document.getElementById('gradientColor2').value = '#a0a0a0';
+            document.getElementById('gradientColor3').value = '#f0f0f0';
             updateBackgroundOptions();
             updatePreview();
         }
@@ -210,12 +201,27 @@
             document.getElementById('gradientColors').style.display = bgType === 'gradient' ? 'block' : 'none';
         }
 
-        document.getElementById('bgType').addEventListener('change', updateBackgroundOptions);
-        document.querySelectorAll('input, textarea, select').forEach(element => {
-            element.addEventListener('input', updatePreview);
+        document.getElementById('text').addEventListener('input', updatePreview);
+        document.getElementById('fontSize').addEventListener('input', updatePreview);
+        document.getElementById('fontColor').addEventListener('input', updatePreview);
+        document.getElementById('fontFamily').addEventListener('change', updatePreview);
+        document.getElementById('textAlign').addEventListener('change', updatePreview);
+        document.getElementById('lineHeight').addEventListener('input', updatePreview);
+        document.getElementById('bgType').addEventListener('change', function() {
+            updateBackgroundOptions();
+            updatePreview();
         });
+        document.getElementById('bgColor').addEventListener('input', updatePreview);
+        document.getElementById('gradientColor1').addEventListener('input', updatePreview);
+        document.getElementById('gradientColor2').addEventListener('input', updatePreview);
+        document.getElementById('gradientColor3').addEventListener('input', updatePreview);
 
-        window.onload = updatePreview;
+        // projectLink
+        document.getElementById('projectLink').href = 'https://github.com/JohnMing143/postermaker';
+
+        // 初始化
+        updateBackgroundOptions();
+        updatePreview();
     </script>
 </body>
 </html>
