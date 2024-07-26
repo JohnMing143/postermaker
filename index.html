@@ -6,9 +6,8 @@
     <title>PosterMaker - 海报制作器</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* 保持原有的样式 */
         body {
-            font-family: 'Noto Sans SC', mingchao, sans-serif;
+            font-family: 'Noto Sans SC', Arial, sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
@@ -69,24 +68,6 @@
         #gradientColors {
             display: none;
         }
-        #loading {
-            display: none;
-            text-align: center;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            .form-group {
-                margin-bottom: 10px;
-            }
-            button {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -106,10 +87,16 @@
     <div class="form-group">
         <label for="fontFamily">字体：</label>
         <select id="fontFamily">
-            <option value="mingchao">明朝体</option>
-            <option value="siyuansong">思源宋</option>
-            <option value="EVA">EVA</option>
-            <!-- Add more font options as needed -->
+            <option value="FangSong">仿宋</option>
+            <option value="SimHei">黑体</option>
+            <option value="SimSun">宋体</option>
+            <option value="KaiTi">楷体</option>
+            <option value="STXingkai">行楷</option>
+            <option value="STCaiyun">彩云</option>
+            <option value="STHupo">华文琥珀</option>
+            <option value="STLiti">隶书</option>
+            <option value="STXinwei">新魏</option>
+            <option value="SimSun-ExtB">明朝体</option>
         </select>
     </div>
     <div class="form-group">
@@ -143,7 +130,6 @@
     </div>
     <button onclick="generateImage()">生成海报</button>
     <button onclick="resetSettings()">重置设置</button>
-    <div id="loading">正在生成图片...</div>
     <img id="preview" alt="预览图片">
     <a id="downloadLink" style="display:none;">下载PNG图片</a>
 
@@ -159,90 +145,42 @@
         }
 
         async function generateImage(isPreview = false) {
-            if (!validateInputs()) return;
-
-            const loading = document.getElementById('loading');
-            loading.style.display = 'block';
-
-            try {
-                const text = encodeURIComponent(document.getElementById('text').value);
-                const fontSize = document.getElementById('fontSize').value;
-                const fontColor = encodeURIComponent(document.getElementById('fontColor').value);
-                const fontFamily = encodeURIComponent(document.getElementById('fontFamily').value);
-                const textAlign = document.getElementById('textAlign').value;
-                const lineHeight = document.getElementById('lineHeight').value;
-                const bgType = document.getElementById('bgType').value;
-                const bgColor = encodeURIComponent(document.getElementById('bgColor').value);
-                const gradientColor1 = encodeURIComponent(document.getElementById('gradientColor1').value);
-                const gradientColor2 = encodeURIComponent(document.getElementById('gradientColor2').value);
-                
-                let url = `${workerUrl}?text=${text}&fontSize=${fontSize}&fontColor=${fontColor}&fontFamily=${fontFamily}&textAlign=${textAlign}&lineHeight=${lineHeight}&bgType=${bgType}`;
-                
-                if (bgType === 'color') {
-                    url += `&bgColor=${bgColor}`;
-                } else {
-                    url += `&bgGradient=${gradientColor1},${gradientColor2}`;
-                }
-                
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error('Image generation failed');
-                }
-                const svgText = await response.text();
-
-                // 创建一个新的Image对象
-                const img = new Image();
-                img.onload = function() {
-                    // 创建canvas
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    
-                    // 在canvas上绘制图像
-                    ctx.drawImage(img, 0, 0);
-                    
-                    // 将canvas转换为PNG
-                    const pngUrl = canvas.toDataURL('image/png');
-                    
-                    // 更新预览图像
-                    const preview = document.getElementById('preview');
-                    preview.src = pngUrl;
-
-                    if (!isPreview) {
-                        const downloadLink = document.getElementById('downloadLink');
-                        downloadLink.href = pngUrl;
-                        downloadLink.download = 'poster.png';
-                        downloadLink.style.display = 'inline-block';
-                        downloadLink.textContent = '下载PNG图片';
-                        saveSettings();
-                    }
-                };
-                
-                // 设置Image的src为SVG数据URL
-                img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgText);
-
-            } catch (error) {
-                console.error('Error generating image:', error);
-                alert('Failed to generate image. Please try again.');
-            } finally {
-                loading.style.display = 'none';
+            const text = encodeURIComponent(document.getElementById('text').value);
+            const fontSize = document.getElementById('fontSize').value;
+            const fontColor = encodeURIComponent(document.getElementById('fontColor').value);
+            const fontFamily = encodeURIComponent(document.getElementById('fontFamily').value);
+            const textAlign = document.getElementById('textAlign').value;
+            const lineHeight = document.getElementById('lineHeight').value;
+            const bgType = document.getElementById('bgType').value;
+            const bgColor = encodeURIComponent(document.getElementById('bgColor').value);
+            const gradientColor1 = encodeURIComponent(document.getElementById('gradientColor1').value);
+            const gradientColor2 = encodeURIComponent(document.getElementById('gradientColor2').value);
+            
+            let url = `${workerUrl}?text=${text}&fontSize=${fontSize}&fontColor=${fontColor}&fontFamily=${fontFamily}&textAlign=${textAlign}&lineHeight=${lineHeight}&bgType=${bgType}`;
+            
+            if (bgType === 'color') {
+                url += `&bgColor=${bgColor}`;
+            } else {
+                url += `&bgGradient=${gradientColor1},${gradientColor2}`;
             }
-        }
+            
+            const preview = document.getElementById('preview');
+            preview.src = url;
 
-        function validateInputs() {
-            if (!document.getElementById('text').value.trim()) {
-                alert('请输入文本内容');
-                return false;
+            if (!isPreview) {
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = url;
+                downloadLink.download = 'poster.png';
+                downloadLink.style.display = 'inline-block';
+                downloadLink.textContent = '下载PNG图片';
             }
-            return true;
         }
 
         function resetSettings() {
             document.getElementById('text').value = '';
             document.getElementById('fontSize').value = '30';
             document.getElementById('fontColor').value = '#000000';
-            document.getElementById('fontFamily').value = 'mingchao';
+            document.getElementById('fontFamily').value = 'Arial';
             document.getElementById('textAlign').value = 'middle';
             document.getElementById('lineHeight').value = '1.2';
             document.getElementById('bgType').value = 'color';
@@ -251,45 +189,12 @@
             document.getElementById('gradientColor2').value = '#f0f0f0';
             updateBackgroundOptions();
             updatePreview();
-            localStorage.removeItem('posterMakerSettings');
         }
 
         function updateBackgroundOptions() {
             const bgType = document.getElementById('bgType').value;
             document.getElementById('bgColorGroup').style.display = bgType === 'color' ? 'block' : 'none';
             document.getElementById('gradientColors').style.display = bgType === 'gradient' ? 'block' : 'none';
-        }
-
-        function saveSettings() {
-            const settings = {
-                fontSize: document.getElementById('fontSize').value,
-                fontColor: document.getElementById('fontColor').value,
-                fontFamily: document.getElementById('fontFamily').value,
-                textAlign: document.getElementById('textAlign').value,
-                lineHeight: document.getElementById('lineHeight').value,
-                bgType: document.getElementById('bgType').value,
-                bgColor: document.getElementById('bgColor').value,
-                gradientColor1: document.getElementById('gradientColor1').value,
-                gradientColor2: document.getElementById('gradientColor2').value
-            };
-            localStorage.setItem('posterMakerSettings', JSON.stringify(settings));
-        }
-
-        function loadSettings() {
-            const settings = JSON.parse(localStorage.getItem('posterMakerSettings'));
-            if (settings) {
-                document.getElementById('fontSize').value = settings.fontSize;
-                document.getElementById('fontColor').value = settings.fontColor;
-                document.getElementById('fontFamily').value = settings.fontFamily;
-                document.getElementById('textAlign').value = settings.textAlign;
-                document.getElementById('lineHeight').value = settings.lineHeight;
-                document.getElementById('bgType').value = settings.bgType;
-                document.getElementById('bgColor').value = settings.bgColor;
-                document.getElementById('gradientColor1').value = settings.gradientColor1;
-                document.getElementById('gradientColor2').value = settings.gradientColor2;
-                updateBackgroundOptions();
-                updatePreview();
-            }
         }
 
         document.getElementById('text').addEventListener('input', updatePreview);
@@ -310,7 +215,6 @@
         document.getElementById('projectLink').href = 'https://github.com/JohnMing143/postermaker';
 
         // 初始化
-        window.addEventListener('load', loadSettings);
         updateBackgroundOptions();
         updatePreview();
     </script>
