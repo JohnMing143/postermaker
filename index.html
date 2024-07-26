@@ -5,27 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PosterMaker - 海报制作器</title>
     <style>
-        @font-face {
-            font-family: 'siyuansong';
-            src: url('https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/siyuansong.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        @font-face {
-            font-family: 'EVA';
-            src: url('https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/EVA.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        @font-face {
-            font-family: 'SimSun-ExtB';
-            src: url('https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/SimSun-ExtB.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-
         body {
             font-family: 'Noto Sans SC', siyuansong, sans-serif;
             max-width: 800px;
@@ -144,7 +123,7 @@
     <button onclick="generateImage()">生成海报</button>
     <button onclick="resetSettings()">重置设置</button>
     <img id="preview" alt="预览图片">
-    <a id="downloadLink" style="display:none;">下载PNG图片</a>
+    <a id="downloadLink" style="display:none;">下载图片</a>
 
     <footer>
         &copy; 2024 PosterMaker | Made by Ming143 | <a href="#" id="projectLink">Project repository</a>
@@ -153,11 +132,32 @@
     <script>
         const workerUrl = 'https://postermaker.ming143.eu.org';
 
+        const fontFiles = {
+            'siyuansong': 'https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/siyuansong.woff',
+            'EVA': 'https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/EVA.woff',
+            'SimSun-ExtB': 'https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/SimSun-ExtB.woff'
+        };
+
+        function loadFont(name, url) {
+            const font = new FontFace(name, `url(${url})`);
+            return font.load().then(function(loadedFont) {
+                document.fonts.add(loadedFont);
+            }).catch(function(error) {
+                console.error(`Failed to load font ${name} from ${url}:`, error);
+            });
+        }
+
+        async function loadFonts() {
+            await Promise.all(Object.keys(fontFiles).map(name => loadFont(name, fontFiles[name])));
+        }
+
         function updatePreview() {
             generateImage(true);
         }
 
         async function generateImage(isPreview = false) {
+            await loadFonts();
+
             const text = encodeURIComponent(document.getElementById('text').value);
             const fontSize = document.getElementById('fontSize').value;
             const fontColor = encodeURIComponent(document.getElementById('fontColor').value);
@@ -168,15 +168,15 @@
             const bgColor = encodeURIComponent(document.getElementById('bgColor').value);
             const gradientColor1 = encodeURIComponent(document.getElementById('gradientColor1').value);
             const gradientColor2 = encodeURIComponent(document.getElementById('gradientColor2').value);
-            
+
             let url = `${workerUrl}?text=${text}&fontSize=${fontSize}&fontColor=${fontColor}&fontFamily=${fontFamily}&textAlign=${textAlign}&lineHeight=${lineHeight}&bgType=${bgType}`;
-            
+
             if (bgType === 'color') {
                 url += `&bgColor=${bgColor}`;
             } else {
                 url += `&bgGradient=${gradientColor1},${gradientColor2}`;
             }
-            
+
             const preview = document.getElementById('preview');
             preview.src = url;
 
@@ -211,11 +211,6 @@
         }
 
         document.getElementById('bgType').addEventListener('change', updateBackgroundOptions);
-        document.querySelectorAll('input, textarea, select').forEach(element => {
-            element.addEventListener('input', updatePreview);
-        });
-
-        window.onload = updatePreview;
     </script>
 </body>
 </html>
