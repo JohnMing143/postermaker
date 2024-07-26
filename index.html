@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大字报生成器</title>
+    <title>PosterMaker - 海报制作器</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -42,6 +42,7 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s;
+            margin-right: 10px;
         }
         button:hover {
             background-color: #2980b9;
@@ -64,10 +65,13 @@
             text-decoration: none;
             color: #3498db;
         }
+        #gradientColors {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <h1>大字报生成器</h1>
+    <h1>PosterMaker - 海报制作器</h1>
     <div class="form-group">
         <label for="text">文本内容：</label>
         <textarea id="text" rows="5" placeholder="输入您的文本"></textarea>
@@ -83,14 +87,19 @@
     <div class="form-group">
         <label for="fontFamily">字体：</label>
         <select id="fontFamily">
-            <option value="SimSun-ExtB">明朝体</option>
+            <option value="Arial">Arial</option>
             <option value="Microsoft YaHei">微软雅黑</option>
             <option value="SimHei">黑体</option>
             <option value="SimSun">宋体</option>
             <option value="KaiTi">楷体</option>
             <option value="FangSong">仿宋</option>
-            <option value="EVA">EVA</option>
-            <option value="Arial">Arial</option>
+            <option value="SimSun-ExtB">明朝体</option>
+            <option value="STXingkai">行楷</option>
+            <option value="STCaiyun">彩云</option>
+            <option value="STHupo">华文琥珀</option>
+            <option value="STLiti">隶书</option>
+            <option value="STXinwei">新魏</option>
+            <option value="EVA">EVA字体</option>
         </select>
     </div>
     <div class="form-group">
@@ -106,15 +115,29 @@
         <input type="number" id="lineHeight" value="1.2" min="0.5" max="3" step="0.1">
     </div>
     <div class="form-group">
+        <label for="bgType">背景类型：</label>
+        <select id="bgType">
+            <option value="color">纯色</option>
+            <option value="gradient">渐变</option>
+        </select>
+    </div>
+    <div class="form-group" id="bgColorGroup">
         <label for="bgColor">背景颜色：</label>
         <input type="color" id="bgColor" value="#f0f0f0">
     </div>
-    <button onclick="generateImage()">生成图片</button>
+    <div class="form-group" id="gradientColors" style="display:none;">
+        <label for="gradientColor1">渐变色1：</label>
+        <input type="color" id="gradientColor1" value="#ffffff">
+        <label for="gradientColor2">渐变色2：</label>
+        <input type="color" id="gradientColor2" value="#f0f0f0">
+    </div>
+    <button onclick="generateImage()">生成海报</button>
+    <button onclick="resetSettings()">重置设置</button>
     <img id="preview" alt="预览图片">
     <a id="downloadLink" style="display:none;">下载PNG图片</a>
 
     <footer>
-        &copy; 2024 大字报生成器 | 由 Ming143 制作 | <a href="#" id="projectLink">项目仓库</a>
+        &copy; 2024 PosterMaker | 由 Ming143 制作 | <a href="#" id="projectLink">项目仓库</a>
     </footer>
 
     <script>
@@ -131,9 +154,18 @@
             const fontFamily = encodeURIComponent(document.getElementById('fontFamily').value);
             const textAlign = document.getElementById('textAlign').value;
             const lineHeight = document.getElementById('lineHeight').value;
+            const bgType = document.getElementById('bgType').value;
             const bgColor = encodeURIComponent(document.getElementById('bgColor').value);
+            const gradientColor1 = encodeURIComponent(document.getElementById('gradientColor1').value);
+            const gradientColor2 = encodeURIComponent(document.getElementById('gradientColor2').value);
             
-            const url = `${workerUrl}?text=${text}&fontSize=${fontSize}&fontColor=${fontColor}&fontFamily=${fontFamily}&textAlign=${textAlign}&lineHeight=${lineHeight}&bgColor=${bgColor}`;
+            let url = `${workerUrl}?text=${text}&fontSize=${fontSize}&fontColor=${fontColor}&fontFamily=${fontFamily}&textAlign=${textAlign}&lineHeight=${lineHeight}&bgType=${bgType}`;
+            
+            if (bgType === 'color') {
+                url += `&bgColor=${bgColor}`;
+            } else {
+                url += `&bgGradient=${gradientColor1},${gradientColor2}`;
+            }
             
             const preview = document.getElementById('preview');
             preview.src = url;
@@ -141,10 +173,31 @@
             if (!isPreview) {
                 const downloadLink = document.getElementById('downloadLink');
                 downloadLink.href = url;
-                downloadLink.download = 'dazibaoko.png';
+                downloadLink.download = 'poster.png';
                 downloadLink.style.display = 'inline-block';
                 downloadLink.textContent = '下载PNG图片';
             }
+        }
+
+        function resetSettings() {
+            document.getElementById('text').value = '';
+            document.getElementById('fontSize').value = '30';
+            document.getElementById('fontColor').value = '#000000';
+            document.getElementById('fontFamily').value = 'Arial';
+            document.getElementById('textAlign').value = 'middle';
+            document.getElementById('lineHeight').value = '1.2';
+            document.getElementById('bgType').value = 'color';
+            document.getElementById('bgColor').value = '#f0f0f0';
+            document.getElementById('gradientColor1').value = '#ffffff';
+            document.getElementById('gradientColor2').value = '#f0f0f0';
+            updateBackgroundOptions();
+            updatePreview();
+        }
+
+        function updateBackgroundOptions() {
+            const bgType = document.getElementById('bgType').value;
+            document.getElementById('bgColorGroup').style.display = bgType === 'color' ? 'block' : 'none';
+            document.getElementById('gradientColors').style.display = bgType === 'gradient' ? 'block' : 'none';
         }
 
         document.getElementById('text').addEventListener('input', updatePreview);
@@ -153,12 +206,19 @@
         document.getElementById('fontFamily').addEventListener('change', updatePreview);
         document.getElementById('textAlign').addEventListener('change', updatePreview);
         document.getElementById('lineHeight').addEventListener('input', updatePreview);
+        document.getElementById('bgType').addEventListener('change', function() {
+            updateBackgroundOptions();
+            updatePreview();
+        });
         document.getElementById('bgColor').addEventListener('input', updatePreview);
+        document.getElementById('gradientColor1').addEventListener('input', updatePreview);
+        document.getElementById('gradientColor2').addEventListener('input', updatePreview);
 
-        // 设置项目仓库链接
+        // projectLink
         document.getElementById('projectLink').href = 'https://github.com/JohnMing143/postermaker';
 
-        // 初始预览
+        // 初始化
+        updateBackgroundOptions();
         updatePreview();
     </script>
 </body>
