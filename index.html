@@ -4,53 +4,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>大字报生成器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, "Microsoft YaHei", sans-serif;
+            font-family: 'Noto Sans SC', Arial, sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
         }
-        textarea, input, select, button {
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        textarea, input[type="number"], input[type="color"], select {
             width: 100%;
-            margin-bottom: 10px;
-            padding: 5px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
         }
         #preview {
             max-width: 100%;
             height: auto;
             margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         footer {
-            margin-top: 20px;
+            margin-top: 40px;
             text-align: center;
             font-size: 0.8em;
             color: #666;
+        }
+        #downloadLink {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #3498db;
         }
     </style>
 </head>
 <body>
     <h1>大字报生成器</h1>
-    <textarea id="text" rows="5" placeholder="输入您的文本"></textarea>
-    <input type="number" id="fontSize" placeholder="字体大小" value="30">
-    <input type="color" id="fontColor" value="#000000">
-    <select id="fontFamily">
-        <option value="Arial">Arial</option>
-        <option value="Microsoft YaHei">微软雅黑</option>
-        <option value="SimHei">黑体</option>
-        <option value="SimSun">宋体</option>
-        <option value="KaiTi">楷体</option>
-    </select>
-    <select id="textAlign">
-        <option value="start">左对齐</option>
-        <option value="middle">居中</option>
-        <option value="end">右对齐</option>
-    </select>
-    <input type="number" id="lineHeight" placeholder="行高" value="1.2" step="0.1">
-    <input type="color" id="bgColor" value="#f0f0f0">
+    <div class="form-group">
+        <label for="text">文本内容：</label>
+        <textarea id="text" rows="5" placeholder="输入您的文本"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="fontSize">字体大小：</label>
+        <input type="number" id="fontSize" value="30" min="10" max="100">
+    </div>
+    <div class="form-group">
+        <label for="fontColor">字体颜色：</label>
+        <input type="color" id="fontColor" value="#000000">
+    </div>
+    <div class="form-group">
+        <label for="fontFamily">字体：</label>
+        <select id="fontFamily">
+            <option value="SimSun-ExtB">明朝体</option>
+            <option value="Microsoft YaHei">微软雅黑</option>
+            <option value="SimHei">黑体</option>
+            <option value="SimSun">宋体</option>
+            <option value="KaiTi">楷体</option>
+            <option value="FangSong">仿宋</option>
+            <option value="EVA">EVA</option>
+            <option value="Arial">Arial</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="textAlign">对齐方式：</label>
+        <select id="textAlign">
+            <option value="start">左对齐</option>
+            <option value="middle">居中</option>
+            <option value="end">右对齐</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="lineHeight">行高：</label>
+        <input type="number" id="lineHeight" value="1.2" min="0.5" max="3" step="0.1">
+    </div>
+    <div class="form-group">
+        <label for="bgColor">背景颜色：</label>
+        <input type="color" id="bgColor" value="#f0f0f0">
+    </div>
     <button onclick="generateImage()">生成图片</button>
-    <a id="downloadLink" style="display:none;">下载图片</a>
     <img id="preview" alt="预览图片">
+    <a id="downloadLink" style="display:none;">下载PNG图片</a>
 
     <footer>
         &copy; 2024 大字报生成器 | 由 Ming143 制作 | <a href="#" id="projectLink">项目仓库</a>
@@ -80,9 +141,9 @@
             if (!isPreview) {
                 const downloadLink = document.getElementById('downloadLink');
                 downloadLink.href = url;
-                downloadLink.download = 'dazibaoko.svg';
+                downloadLink.download = 'dazibaoko.png';
                 downloadLink.style.display = 'inline-block';
-                downloadLink.textContent = '下载SVG图片';
+                downloadLink.textContent = '下载PNG图片';
             }
         }
 
