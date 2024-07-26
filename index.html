@@ -1,186 +1,245 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PosterMaker - 海报制作器</title>
     <style>
+        @font-face {
+            font-family: 'mingchao';
+            src: url('https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/mingchao.woff') format('woff');
+        }
+        @font-face {
+            font-family: 'siyuansong';
+            src: url('https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/siyuansong.woff') format('woff');
+        }
+        @font-face {
+            font-family: 'EVA';
+            src: url('https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/EVA.woff') format('woff');
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'siyuansong', Arial, sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         label {
             display: block;
             margin-bottom: 5px;
+            font-weight: bold;
         }
-        input, select, textarea {
+        textarea, input[type="number"], input[type="color"], select {
             width: 100%;
-            padding: 5px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
         }
         button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #preview {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #666;
+        }
+        #downloadLink {
+            display: inline-block;
             margin-top: 10px;
+            text-decoration: none;
+            color: #3498db;
+        }
+        #gradientColors {
+            display: none;
         }
     </style>
 </head>
 <body>
     <h1>PosterMaker - 海报制作器</h1>
-
-    <form id="posterForm">
-        <div class="form-group">
-            <label for="text">文本内容：</label>
-            <textarea id="text" name="text" rows="4">默认文本</textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="fontSize">字体大小：</label>
-            <input type="number" id="fontSize" name="fontSize" value="30">
-        </div>
-
-        <div class="form-group">
-            <label for="fontColor">字体颜色：</label>
-            <input type="color" id="fontColor" name="fontColor" value="#000000">
-        </div>
-
-        <div class="form-group">
-            <label for="fontFamily">字体：</label>
-            <select id="fontFamily" name="fontFamily">
-                <option value="mingchao">明朝体</option>
-                <option value="siyuansong">思源宋</option>
-                <option value="EVA">EVA明朝体</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="textAlign">对齐方式：</label>
-            <select id="textAlign" name="textAlign">
-                <option value="start">左对齐</option>
-                <option value="middle">居中</option>
-                <option value="end">右对齐</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="lineHeight">行高：</label>
-            <input type="number" id="lineHeight" name="lineHeight" value="1.2" step="0.1">
-        </div>
-
-        <div class="form-group">
-            <label for="bgType">背景类型：</label>
-            <select id="bgType" name="bgType">
-                <option value="color">纯色</option>
-                <option value="gradient">渐变</option>
-            </select>
-        </div>
-
-        <div id="bgColorGroup" class="form-group">
-            <label for="bgColor">背景颜色：</label>
-            <input type="color" id="bgColor" name="bgColor" value="#f0f0f0">
-        </div>
-
-        <div id="gradientColors" class="form-group" style="display:none;">
-            <label for="gradientColor1">渐变色1：</label>
-            <input type="color" id="gradientColor1" name="gradientColor1" value="#ffffff">
-            <label for="gradientColor2">渐变色2：</label>
-            <input type="color" id="gradientColor2" name="gradientColor2" value="#a0a0a0">
-            <label for="gradientColor3">渐变色3：</label>
-            <input type="color" id="gradientColor3" name="gradientColor3" value="#f0f0f0">
-        </div>
-
-        <div class="form-group">
-            <label for="size">图片尺寸：</label>
-            <select id="size" name="size">
-                <option value="500,300">默认 (500x300)</option>
-                <option value="1080,1920">手机壁纸 (1080x1920)</option>
-                <option value="1920,1080">电脑壁纸 (1920x1080)</option>
-                <option value="1200,630">社交媒体封面 (1200x630)</option>
-                <option value="800,800">Instagram 方形 (800x800)</option>
-                <option value="1280,720">YouTube 缩略图 (1280x720)</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="effect">光影效果：</label>
-            <select id="effect" name="effect">
-                <option value="none">无</option>
-                <option value="shadow">阴影</option>
-                <option value="glow">光晕</option>
-            </select>
-        </div>
-
-        <button type="submit">生成海报</button>
-        <button type="reset">重置设置</button>
-    </form>
-
-    <div id="preview"></div>
+    <div class="form-group">
+        <label for="text">文本内容：</label>
+        <textarea id="text" rows="5" placeholder="输入您的文本"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="fontSize">字体大小：</label>
+        <input type="number" id="fontSize" value="30" min="10" max="100">
+    </div>
+    <div class="form-group">
+        <label for="fontColor">字体颜色：</label>
+        <input type="color" id="fontColor" value="#000000">
+    </div>
+    <div class="form-group">
+        <label for="fontFamily">字体：</label>
+        <select id="fontFamily">
+            <option value="mingchao">明朝体</option>
+            <option value="siyuansong">思源宋</option>
+            <option value="EVA">EVA明朝体</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="textAlign">对齐方式：</label>
+        <select id="textAlign">
+            <option value="start">左对齐</option>
+            <option value="middle">居中</option>
+            <option value="end">右对齐</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="lineHeight">行高：</label>
+        <input type="number" id="lineHeight" value="1.2" min="0.5" max="3" step="0.1">
+    </div>
+    <div class="form-group">
+        <label for="bgType">背景类型：</label>
+        <select id="bgType">
+            <option value="color">纯色</option>
+            <option value="gradient">渐变</option>
+        </select>
+    </div>
+    <div class="form-group" id="bgColorGroup">
+        <label for="bgColor">背景颜色：</label>
+        <input type="color" id="bgColor" value="#f0f0f0">
+    </div>
+    <div class="form-group" id="gradientColors" style="display:none;">
+        <label for="gradientColor1">渐变色1：</label>
+        <input type="color" id="gradientColor1" value="#ffffff">
+        <label for="gradientColor2">渐变色2：</label>
+        <input type="color" id="gradientColor2" value="#a0a0a0">
+        <label for="gradientColor3">渐变色3：</label>
+        <input type="color" id="gradientColor3" value="#f0f0f0">
+    </div>
+    <div class="form-group">
+        <label for="imageSize">图片尺寸：</label>
+        <select id="imageSize">
+            <option value="500x300">默认 (500x300)</option>
+            <option value="1080x1920">手机壁纸 (1080x1920)</option>
+            <option value="1920x1080">电脑壁纸 (1920x1080)</option>
+            <option value="1200x630">社交媒体封面 (1200x630)</option>
+            <option value="800x800">Instagram 方形 (800x800)</option>
+            <option value="1280x720">YouTube 缩略图 (1280x720)</option>
+        </select>
+    </div>
+    <button onclick="generateImage()">生成海报</button>
+    <button onclick="resetSettings()">重置设置</button>
+    <img id="preview" alt="预览图片">
     <a id="downloadLink" style="display:none;">下载PNG图片</a>
 
     <footer>
-        <p>© 2024 PosterMaker | Made by Ming143 | <a id="projectLink" href="#">Project repository</a></p>
+        &copy; 2024 PosterMaker | Made by Ming143 | <a href="#" id="projectLink">Project repository</a>
     </footer>
 
     <script>
-        const form = document.getElementById('posterForm');
-        const preview = document.getElementById('preview');
-        const downloadLink = document.getElementById('downloadLink');
+        const workerUrl = 'https://postermaker.ming143.eu.org';
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(form);
-            const params = new URLSearchParams(formData);
-            const [width, height] = formData.get('size').split(',');
-            params.set('width', width);
-            params.set('height', height);
+        function updatePreview() {
+            generateImage(true);
+        }
+
+        async function generateImage(isPreview = false) {
+            const text = encodeURIComponent(document.getElementById('text').value);
+            const fontSize = document.getElementById('fontSize').value;
+            const fontColor = encodeURIComponent(document.getElementById('fontColor').value);
+            const fontFamily = encodeURIComponent(document.getElementById('fontFamily').value);
+            const textAlign = document.getElementById('textAlign').value;
+            const lineHeight = document.getElementById('lineHeight').value;
+            const bgType = document.getElementById('bgType').value;
+            const bgColor = encodeURIComponent(document.getElementById('bgColor').value);
+            const gradientColor1 = encodeURIComponent(document.getElementById('gradientColor1').value);
+            const gradientColor2 = encodeURIComponent(document.getElementById('gradientColor2').value);
+            const gradientColor3 = encodeURIComponent(document.getElementById('gradientColor3').value);
+            const [width, height] = document.getElementById('imageSize').value.split('x');
             
-            if (formData.get('bgType') === 'gradient') {
-                const gradient = `${formData.get('gradientColor1')},${formData.get('gradientColor2')},${formData.get('gradientColor3')}`;
-                params.set('bgGradient', gradient);
-            }
-
-            try {
-                const response = await fetch(`https://postermaker.ming143.eu.org/?${params.toString()}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const svgText = await response.text();
-
-                preview.innerHTML = svgText;
-
-                // Convert SVG to PNG
-                const svgElement = preview.querySelector('svg');
-                const canvas = document.createElement('canvas');
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                const img = new Image();
-                img.onload = () => {
-                    ctx.drawImage(img, 0, 0);
-                    downloadLink.href = canvas.toDataURL('image/png');
-                    downloadLink.download = 'poster.png';
-                    downloadLink.style.display = 'inline-block';
-                };
-                img.src = 'data:image/svg+xml;base64,' + btoa(svgText);
-            } catch (error) {
-                console.error('Error:', error);
-                preview.textContent = `Error generating poster: ${error.message}`;
-            }
-        });
-
-        document.getElementById('bgType').addEventListener('change', (e) => {
-            const bgColorGroup = document.getElementById('bgColorGroup');
-            const gradientColors = document.getElementById('gradientColors');
-            if (e.target.value === 'gradient') {
-                bgColorGroup.style.display = 'none';
-                gradientColors.style.display = 'block';
+            let url = `${workerUrl}?text=${text}&fontSize=${fontSize}&fontColor=${fontColor}&fontFamily=${fontFamily}&textAlign=${textAlign}&lineHeight=${lineHeight}&bgType=${bgType}&width=${width}&height=${height}`;
+            
+            if (bgType === 'color') {
+                url += `&bgColor=${bgColor}`;
             } else {
-                bgColorGroup.style.display = 'block';
-                gradientColors.style.display = 'none';
+                url += `&bgGradient=${gradientColor1},${gradientColor2},${gradientColor3}`;
             }
+            
+            const preview = document.getElementById('preview');
+            preview.src = url;
+
+            if (!isPreview) {
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = url;
+                downloadLink.download = 'poster.png';
+                downloadLink.style.display = 'inline-block';
+                downloadLink.textContent = '下载PNG图片';
+            }
+        }
+
+        function resetSettings() {
+            document.getElementById('text').value = '';
+            document.getElementById('fontSize').value = '30';
+            document.getElementById('fontColor').value = '#000000';
+            document.getElementById('fontFamily').value = 'siyuansong';
+            document.getElementById('textAlign').value = 'middle';
+            document.getElementById('lineHeight').value = '1.2';
+            document.getElementById('bgType').value = 'color';
+            document.getElementById('bgColor').value = '#f0f0f0';
+            document.getElementById('gradientColor1').value = '#ffffff';
+            document.getElementById('gradientColor2').value = '#a0a0a0';
+            document.getElementById('gradientColor3').value = '#f0f0f0';
+            document.getElementById('imageSize').value = '500x300';
+            updateBackgroundOptions();
+            updatePreview();
+        }
+
+        function updateBackgroundOptions() {
+            const bgType = document.getElementById('bgType').value;
+            document.getElementById('bgColorGroup').style.display = bgType === 'color' ? 'block' : 'none';
+            document.getElementById('gradientColors').style.display = bgType === 'gradient' ? 'block' : 'none';
+        }
+
+        document.getElementById('text').addEventListener('input', updatePreview);
+        document.getElementById('fontSize').addEventListener('input', updatePreview);
+        document.getElementById('fontColor').addEventListener('input', updatePreview);
+        document.getElementById('fontFamily').addEventListener('change', updatePreview);
+        document.getElementById('textAlign').addEventListener('change', updatePreview);
+        document.getElementById('lineHeight').addEventListener('input', updatePreview);
+        document.getElementById('bgType').addEventListener('change', function() {
+            updateBackgroundOptions();
+            updatePreview();
         });
+        document.getElementById('bgColor').addEventListener('input', updatePreview);
+        document.getElementById('gradientColor1').addEventListener('input', updatePreview);
+        document.getElementById('gradientColor2').addEventListener('input', updatePreview);
+        document.getElementById('gradientColor3').addEventListener('input', updatePreview);
+        document.getElementById('imageSize').addEventListener('change', updatePreview);
+
+        // projectLink
+        document.getElementById('projectLink').href = 'https://github.com/JohnMing143/postermaker';
+
+        // 初始化
+        updateBackgroundOptions();
+        updatePreview();
     </script>
 </body>
 </html>
