@@ -146,19 +146,21 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="lightEffect">光线效果：</label>
-        <select id="lightEffect">
+        <label for="naturalLighting">自然光照：</label>
+        <select id="naturalLighting">
             <option value="none">无</option>
-            <option value="window">窗户光</option>
-            <option value="spotlight">聚光灯</option>
+            <option value="softDiffuse">柔和散射光</option>
+            <option value="directional">定向光</option>
+            <option value="ambient">环境光</option>
         </select>
     </div>
     <div class="form-group">
         <label for="paperTexture">纸张质感：</label>
         <select id="paperTexture">
             <option value="none">无</option>
-            <option value="rough">粗糙</option>
-            <option value="canvas">帆布</option>
+            <option value="smooth">平滑</option>
+            <option value="linen">亚麻纹</option>
+            <option value="laid">纵横纹</option>
         </select>
     </div>
     <button onclick="generateImage()">生成海报</button>
