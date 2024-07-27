@@ -192,10 +192,10 @@
             const gradientColor2 = encodeURIComponent(document.getElementById('gradientColor2').value);
             const gradientColor3 = encodeURIComponent(document.getElementById('gradientColor3').value);
             const [width, height] = document.getElementById('imageSize').value.split('x');
-            const lightEffect = document.getElementById('lightEffect').value;
+            const naturalLighting = document.getElementById('naturalLighting').value;
             const paperTexture = document.getElementById('paperTexture').value;
             
-            let url = `${workerUrl}?text=${text}&fontSize=${fontSize}&fontColor=${fontColor}&fontFamily=${fontFamily}&textAlign=${textAlign}&lineHeight=${lineHeight}&bgType=${bgType}&width=${width}&height=${height}&lightEffect=${lightEffect}&paperTexture=${paperTexture}`;
+            let url = `${workerUrl}?text=${text}&fontSize=${fontSize}&fontColor=${fontColor}&fontFamily=${fontFamily}&textAlign=${textAlign}&lineHeight=${lineHeight}&bgType=${bgType}&width=${width}&height=${height}&naturalLighting=${encodeURIComponent(naturalLighting)}&paperTexture=${encodeURIComponent(paperTexture)}`;
             
             if (bgType === 'color') {
                 url += `&bgColor=${bgColor}`;
