@@ -146,21 +146,19 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="naturalLighting">自然光照：</label>
-        <select id="naturalLighting">
+        <label for="lightEffect">光线效果：</label>
+        <select id="lightEffect">
             <option value="none">无</option>
-            <option value="softDiffuse">柔和散射光</option>
-            <option value="directional">定向光</option>
-            <option value="ambient">环境光</option>
+            <option value="window">窗户光</option>
+            <option value="spotlight">聚光灯</option>
         </select>
     </div>
     <div class="form-group">
         <label for="paperTexture">纸张质感：</label>
         <select id="paperTexture">
             <option value="none">无</option>
-            <option value="smooth">平滑</option>
-            <option value="linen">亚麻纹</option>
-            <option value="laid">纵横纹</option>
+            <option value="rough">粗糙</option>
+            <option value="canvas">帆布</option>
         </select>
     </div>
     <button onclick="generateImage()">生成海报</button>
@@ -192,10 +190,10 @@
             const gradientColor2 = encodeURIComponent(document.getElementById('gradientColor2').value);
             const gradientColor3 = encodeURIComponent(document.getElementById('gradientColor3').value);
             const [width, height] = document.getElementById('imageSize').value.split('x');
-            const naturalLighting = document.getElementById('naturalLighting').value;
+            const lightEffect = document.getElementById('lightEffect').value;
             const paperTexture = document.getElementById('paperTexture').value;
             
-            let url = `${workerUrl}?text=${text}&fontSize=${fontSize}&fontColor=${fontColor}&fontFamily=${fontFamily}&textAlign=${textAlign}&lineHeight=${lineHeight}&bgType=${bgType}&width=${width}&height=${height}&naturalLighting=${encodeURIComponent(naturalLighting)}&paperTexture=${encodeURIComponent(paperTexture)}`;
+            let url = `${workerUrl}?text=${text}&fontSize=${fontSize}&fontColor=${fontColor}&fontFamily=${fontFamily}&textAlign=${textAlign}&lineHeight=${lineHeight}&bgType=${bgType}&width=${width}&height=${height}&lightEffect=${lightEffect}&paperTexture=${paperTexture}`;
             
             if (bgType === 'color') {
                 url += `&bgColor=${bgColor}`;
