@@ -22,9 +22,10 @@ async function handleRequest(request) {
   const svgText = lines.map((line, index) => {
     const y = height / 2 - (lines.length - 1) * fontSize * lineHeight / 2 + index * fontSize * lineHeight
     return `<text x="${textAlign === 'start' ? 10 : textAlign === 'end' ? width - 10 : width / 2}" y="${y}" 
-      font-family="${fontFamily}, 'siyuansong', sans-serif" 
+      font-family="${fontFamily}, sans-serif" 
       font-size="${fontSize}" fill="${fontColor}" text-anchor="${textAlign === 'start' ? 'start' : textAlign === 'end' ? 'end' : 'middle'}">${line}</text>`
   }).join('')
+
 
   let background;
   if (bgType === 'gradient') {
@@ -101,20 +102,6 @@ async function handleRequest(request) {
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
       <defs>
         ${filters}
-        <style>
-          @font-face {
-            font-family: 'mingchao';
-            src: url('https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/mingchao.woff') format('woff');
-          }
-          @font-face {
-            font-family: 'siyuansong';
-            src: url('https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/siyuansong.woff') format('woff');
-          }
-          @font-face {
-            font-family: 'EVA';
-            src: url('https://raw.githubusercontent.com/JohnMing143/postermaker/main/typeface/EVA.woff') format('woff');
-          }
-        </style>
       </defs>
       <g ${paperTexture !== 'none' ? 'filter="url(#paper-texture)"' : ''}>
         ${background}
