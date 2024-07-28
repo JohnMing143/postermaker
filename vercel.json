@@ -1,0 +1,5 @@
+{
+    "routes": [
+      { "src": "/fonts/(.*)", "dest": "/fonts/$1" }
+    ]
+  }
