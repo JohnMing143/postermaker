@@ -1,17 +1,17 @@
 @font-face {
-    font-family: 'mingchao';
-    src: url('/fonts/mingchao.woff') format('woff');
-    font-display: swap;
-  }
-  
-  @font-face {
-    font-family: 'siyuansong';
-    src: url('/fonts/siyuansong.woff') format('woff');
-    font-display: swap;
-  }
-  
-  @font-face {
-    font-family: 'EVA';
-    src: url('/fonts/EVA.woff') format('woff');
-    font-display: swap;
-  }
+  font-family: 'mingchao';
+  src: url('./fonts/mingchao.woff') format('woff');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'siyuansong';
+  src: url('./fonts/siyuansong.woff') format('woff');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'EVA';
+  src: url('./fonts/EVA.woff') format('woff');
+  font-display: swap;
+}
